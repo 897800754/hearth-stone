@@ -1,25 +1,26 @@
-package cn.cg.hearthstone.hero.model;
+package cn.cg.hearthstone.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * 英雄职业
+ * 职业
  *
  * @author: cg1
  * @date: 2021-04-16 12:56
  **/
 @AllArgsConstructor
 @Getter
-public enum HeroOccupationEnum {
+public enum CardTypeEnum {
     /**
-     * 法师
+     * 生物
      */
-    MASTER("master", "法师"),
+    ANIMAL("animal", "动物"),
     /**
-     * 猎人
+     * 法术
      */
-    HUNTER("hunter", "猎人");
+    MAGIC("magic", "法术"),
+    ;
 
 
     private String code;

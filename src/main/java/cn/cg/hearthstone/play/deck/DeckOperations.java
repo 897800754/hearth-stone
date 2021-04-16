@@ -1,6 +1,8 @@
-package cn.cg.hearthstone.hero.model;
+package cn.cg.hearthstone.play.deck;
+
 
 import cn.cg.hearthstone.card.Card;
+import cn.cg.hearthstone.play.player.Player;
 
 import java.util.List;
 
@@ -24,4 +26,10 @@ public interface DeckOperations {
      * @return
      */
     Card obtainCard();
+
+    /**
+     * 初始化套牌
+     * @param player
+     */
+    void initDeck(Player player);
 }

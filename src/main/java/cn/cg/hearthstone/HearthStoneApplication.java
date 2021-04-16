@@ -8,6 +8,8 @@ public class HearthStoneApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(HearthStoneApplication.class, args);
+
+
     }
 
 }

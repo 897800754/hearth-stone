@@ -1,6 +1,7 @@
-package cn.cg.hearthstone.hero.model;
+package cn.cg.hearthstone.play.deck;
 
 import cn.cg.hearthstone.card.Card;
+import cn.cg.hearthstone.play.player.Player;
 import lombok.Data;
 import org.springframework.util.CollectionUtils;
 
@@ -21,8 +22,10 @@ public class Deck implements DeckOperations {
      * 套牌
      * todo
      */
-    private Stack<Card> deckCards = new Stack<Card>();
+    private Stack<Card> deckCards;
 
+    public Deck() {
+    }
 
     /**
      * 获取卡牌
@@ -35,9 +38,9 @@ public class Deck implements DeckOperations {
         ArrayList<Card> cards = new ArrayList<>();
         int cursor = 0;
         while (cursor >= count) {
-            Card card = deckCards.pop();
-            if (card != null) {
-                cards.add(card);
+            Card findCard = deckCards.pop();
+            if (findCard != null) {
+                cards.add(findCard);
             } else {
                 break;
             }
@@ -60,4 +63,20 @@ public class Deck implements DeckOperations {
         return CollectionUtils.firstElement(cardFromHouse);
     }
 
+    /**
+     * 初始化卡组
+     *
+     * @param player
+     */
+    @Override
+    public void initDeck(Player player) {
+        //获取套牌
+        Stack<Card> cards = player.getDeckCards(player.getDeckName());
+        //洗牌
+        flushDeckCards(cards);
+    }
+
+    private void flushDeckCards(Stack<Card> cards) {
+        this.deckCards = cards;
+    }
 }
