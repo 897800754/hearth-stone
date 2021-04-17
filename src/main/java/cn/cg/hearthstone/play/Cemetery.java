@@ -1,7 +1,8 @@
 package cn.cg.hearthstone.play;
 
 import cn.cg.hearthstone.card.Card;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
  * @author: cg1
  * @date: 2021-04-16 16:27
  **/
-@Data
+@Getter
+@Setter
 public class Cemetery {
 
     private List<Card> cardCemetery = new ArrayList<>();

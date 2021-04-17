@@ -1,17 +1,23 @@
 package cn.cg.hearthstone.play.player;
 
+import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.card.CardHolder;
 import cn.cg.hearthstone.card.animal.AnimalCard;
 import cn.cg.hearthstone.card.animal.BabyFishmanCard;
+import cn.cg.hearthstone.enums.CardBattleStatusEnum;
 import cn.cg.hearthstone.enums.CardTypeEnum;
+import cn.cg.hearthstone.hero.Hero;
 import cn.cg.hearthstone.play.BattleZone;
 import cn.cg.hearthstone.play.Cemetery;
-import cn.cg.hearthstone.play.room.Room;
 import cn.cg.hearthstone.play.deck.Deck;
 import cn.cg.hearthstone.play.hand.Hand;
-import cn.cg.hearthstone.hero.Hero;
-import lombok.Data;
+import cn.cg.hearthstone.support.JsonUtil;
+import cn.cg.hearthstone.support.PrintLogInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Collections;
 import java.util.Stack;
@@ -22,16 +28,17 @@ import java.util.Stack;
  * @author: cg1
  * @date: 2021-04-16 15:37
  **/
-@Data
-public class Player implements PlayerOperations {
+@Getter
+@Setter
+@Slf4j
+public class Player implements PlayerOperations, PrintLogInfo {
     /**
      * 玩家名
      */
     private String playName;
 
-    public Player(String playName, Room room, Hero hero, String deckName) {
+    public Player(String playName, Hero hero, String deckName) {
         this.playName = playName;
-        this.room = room;
         this.cemetery = new Cemetery();
         this.deck = new Deck();
         this.hand = new Hand();
@@ -49,7 +56,8 @@ public class Player implements PlayerOperations {
     /**
      * room
      */
-    private Room room;
+    @JsonIgnore
+    private Game game;
     /**
      * 血量
      */
@@ -61,12 +69,17 @@ public class Player implements PlayerOperations {
     /**
      * 套牌对象
      */
+    //todo 暂时忽略
+    @JsonIgnore
     private Deck deck;
-
     /**
      * 当前费用
      */
-    private Integer currentCost = 1;
+    private Integer currentCost = 0;
+    /**
+     * 总费用
+     */
+    private Integer totalCost = 0;
     /**
      * 手牌
      */
@@ -74,28 +87,47 @@ public class Player implements PlayerOperations {
     /**
      * 手牌上限
      */
+    //todo 暂未处理
     private Integer handCardMaxLimit = 5;
     /**
      * 墓地
      */
     private Cemetery cemetery;
     /**
-     * 战斗区
-     *
-     * @param card
+     * 技能状态
      */
-    private BattleZone battleZone;
+    private CardBattleStatusEnum cardBattleStatusEnum;
+
 
     @Override
     public void playHandCard(Card card) {
+        //check是否可以打出
+        //todo 当前只判断费用
+        int cost = currentCost - card.getCost();
+        if (cost < 0) {
+            //费用不够
+            log.warn("费用不够");
+            return;
+        } else {
+            currentCost = cost;
+        }
         //生物卡牌
         if (CardTypeEnum.ANIMAL.getCode().equals(card.getCardTypeEnum().getCode())) {
             //战吼回调
-            card.battleRoar();
+            AnimalCard animalCard = (AnimalCard) card;
+            animalCard.battleRoar();
+
             //加入战斗区
-            CardHolder<AnimalCard> animalCardCardHolder = new CardHolder<>((AnimalCard) card);
-            battleZone.addCardHolder(this.playName, animalCardCardHolder);
+            CardHolder<AnimalCard> animalCardCardHolder = new CardHolder<>(animalCard);
+
+            game.getBattleZone().addCardHolder(this.playName, animalCardCardHolder);
+        } else {
+            //todo 法术
+            //加入到墓地
+
         }
+        //从手牌中删除
+        hand.remove(Collections.singletonList(card));
     }
 
     @Override
@@ -116,6 +148,63 @@ public class Player implements PlayerOperations {
         this.hand.initHand(this);
     }
 
+    @Override
+    public void cardAttack(CardHolder<AnimalCard> from, Object to) {
+        if (!CardBattleStatusEnum.ATTACHABLE.getStatus().equals(from.getBattleStatus().getStatus())) {
+            log.warn("不可攻击");
+            return;
+        }
+        //攻击完成 CardHolder<AnimalCard> to
+        if (to instanceof CardHolder) {
+            //攻击生物
+            from.attack((CardHolder) to);
+        } else {
+            from.attack((Player) to);
+        }
+        //判断是否要从棋牌中删除
+        game.getBattleZone().removeIfNeed();
+    }
+
+    @Override
+    public void attack(Object to) {
+        this.hero.userSkill(this, to);
+    }
+
+    @Override
+    public void stopRound() {
+        game.finishRound(this);
+    }
+
+    @Override
+    public void beginRound() {
+        //费用+1
+        this.totalCost++;
+        //当前费用回满
+        this.currentCost = this.totalCost;
+        //抽卡
+        drawCards();
+        //己方怪物状态重置
+        flushZoneCardsBattleStatus();
+        //打印状态信息
+        printInfo();
+    }
+
+    @Override
+    public void beginBattle(Game game) {
+        this.game = game;
+    }
+
+    @Override
+    public void stopBattle(Game game) {
+
+    }
+
+
+    private void flushZoneCardsBattleStatus() {
+        BattleZone battleZone = this.getGame().getBattleZone();
+        battleZone.flushCardsBattleStatus(this);
+    }
+
 
     /**
      * 鱼人宝宝卡组
@@ -131,5 +220,18 @@ public class Player implements PlayerOperations {
             deckCards.add(babyFishmanCard);
         }
         return deckCards;
+    }
+
+    @Override
+    public void printInfo() {
+        //打印玩家卡牌信息
+        boolean debugEnabled = log.isDebugEnabled();
+        //debug模式 打印详细日志
+        if (debugEnabled) {
+            log.debug("======================回合开始:玩家名{}================================",this.getPlayName());
+            log.debug("基本信息:\r\n{}", JsonUtil.toJsonString(this));
+            log.debug("牌局情况:\r\n{}", JsonUtil.toJsonString(this.getGame()));
+
+        }
     }
 }

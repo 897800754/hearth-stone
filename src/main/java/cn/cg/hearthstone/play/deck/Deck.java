@@ -2,7 +2,8 @@ package cn.cg.hearthstone.play.deck;
 
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.play.player.Player;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
@@ -15,12 +16,12 @@ import java.util.Stack;
  * @author: cg1
  * @date: 2021-04-16 13:39
  **/
-@Data
+@Getter
+@Setter
 public class Deck implements DeckOperations {
 
     /**
      * 套牌
-     * todo
      */
     private Stack<Card> deckCards;
 
@@ -36,8 +37,8 @@ public class Deck implements DeckOperations {
     @Override
     public List<Card> obtainCard(Integer count) {
         ArrayList<Card> cards = new ArrayList<>();
-        int cursor = 0;
-        while (cursor >= count) {
+        int cursor = 1;
+        while (cursor <= count) {
             Card findCard = deckCards.pop();
             if (findCard != null) {
                 cards.add(findCard);

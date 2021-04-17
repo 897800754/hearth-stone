@@ -12,6 +12,7 @@ public interface HeroOperations {
 
     /**
      * 初始化
+     *
      * @param player
      */
     void initHero(Player player);
@@ -19,7 +20,16 @@ public interface HeroOperations {
 
     /**
      * 技能
+     * @return
      */
-    void userSkill();
+    boolean userSkill(Player from, Object to);
+
+    /**
+     * 验证技能
+     *
+     * @param from
+     * @return
+     */
+    boolean validateSkillCost(Player from);
 
 }

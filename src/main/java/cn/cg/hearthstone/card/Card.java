@@ -2,7 +2,10 @@ package cn.cg.hearthstone.card;
 
 import cn.cg.hearthstone.enums.CardTypeEnum;
 import cn.cg.hearthstone.enums.OccupationEnum;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.UUID;
 
 /**
  * 卡牌基类
@@ -10,12 +13,11 @@ import lombok.Data;
  * @author: cg1
  * @date: 2021-04-16 15:29
  **/
-@Data
+@Getter
+@Setter
 public abstract class Card implements CardOperations {
 
-    public Card() {
-    }
-
+    private String id = UUID.randomUUID().toString();
     /**
      * 职业类型
      */

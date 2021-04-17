@@ -1,9 +1,7 @@
 package cn.cg.hearthstone.card.animal;
 
 import cn.cg.hearthstone.enums.OccupationEnum;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 
 /**
  * 鱼人宝宝
@@ -12,15 +10,10 @@ import lombok.ToString;
  * @date: 2021-04-16 15:45
  **/
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 @ToString
 public class BabyFishmanCard extends AnimalCard {
-
-
-    public BabyFishmanCard() {
-        super();
-        init();
-    }
 
 
     @Override
@@ -34,6 +27,9 @@ public class BabyFishmanCard extends AnimalCard {
         setBloodVolume(1);
     }
 
+    /**
+     * 战吼
+     */
     @Override
     public void battleRoar() {
 

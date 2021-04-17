@@ -2,20 +2,23 @@ package cn.cg.hearthstone.card.animal;
 
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.enums.CardTypeEnum;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * @author: cg1
  * @date: 2021-04-16 15:47
  **/
 @EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 public abstract class AnimalCard extends Card {
 
 
     public AnimalCard() {
         this.setCardTypeEnum(CardTypeEnum.ANIMAL);
+        init();
     }
 
     /**
@@ -26,7 +29,6 @@ public abstract class AnimalCard extends Card {
      * 血量
      */
     private Integer bloodVolume;
-
 
 
 }

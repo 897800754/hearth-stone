@@ -16,12 +16,18 @@ public interface HandOperations {
     /**
      * 加入卡牌至手牌
      *
-     * @param card
+     * @param cards
      */
-    void addCard(List<Card> card);
+    void addCard(List<Card> cards);
+
+    /**
+     * 从手牌中删除
+     */
+    void remove(List<Card> cards);
 
     /**
      * 初始化手牌
+     *
      * @param player
      */
     void initHand(Player player);
