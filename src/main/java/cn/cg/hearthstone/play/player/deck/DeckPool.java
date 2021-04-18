@@ -2,6 +2,7 @@ package cn.cg.hearthstone.play.player.deck;
 
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.card.animal.BabyFishmanCard;
+import cn.cg.hearthstone.card.animal.LootHoarderCard;
 import cn.cg.hearthstone.card.animal.MurlocTidehunterCard;
 
 import java.util.HashMap;
@@ -36,6 +37,13 @@ public class DeckPool {
             murlocTidehunterDeckCards.add(murlocTidehunterCard);
         }
         DECK_POOL.put("鱼人猎潮者卡组", murlocTidehunterDeckCards);
+        //三十张战利品
+        Stack<Card> lootHoarderCardDeckCards = new Stack<>();
+        for (int i = 0; i < 30; i++) {
+            LootHoarderCard lootHoarderCard = new LootHoarderCard();
+            lootHoarderCardDeckCards.add(lootHoarderCard);
+        }
+        DECK_POOL.put("战利品卡组", lootHoarderCardDeckCards);
     }
 
     public static Stack<Card> getDeck(String name) {

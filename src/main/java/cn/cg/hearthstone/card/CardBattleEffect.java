@@ -1,6 +1,7 @@
 package cn.cg.hearthstone.card;
 
 import cn.cg.hearthstone.Game;
+import cn.cg.hearthstone.play.player.Player;
 
 /**
  * 卡牌战斗消息
@@ -15,5 +16,8 @@ public interface CardBattleEffect {
      */
     void BattleCry(Game game);
 
-
+    /**
+     * 亡语
+     */
+    void deathLanguage(Game game, Player fromPlay);
 }

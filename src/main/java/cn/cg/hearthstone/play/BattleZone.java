@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * 战斗棋盘
@@ -42,13 +43,33 @@ public class BattleZone {
 
 
     public void removeIfNeed() {
-        List<CardHolder<AnimalCard>> firstCardHolders = battleZone.get(game.getFirstPlayer().getPlayName());
-        List<CardHolder<AnimalCard>> lastCardHolders = battleZone.get(game.getLastPlayer().getPlayName());
-        firstCardHolders.removeIf(x -> x.getLive() == 0 || x.getCurrentBloodVolume() <= 0);
-        lastCardHolders.removeIf(x -> x.getLive() == 0 || x.getCurrentBloodVolume() <= 0);
-        //送入墓地,todo
+        Player firstPlayer = game.getFirstPlayer();
+        List<CardHolder<AnimalCard>> firstCardHolders = battleZone.get(firstPlayer.getPlayName());
+        Player lastPlayer = game.getLastPlayer();
+        List<CardHolder<AnimalCard>> lastCardHolders = battleZone.get(lastPlayer.getPlayName());
 
+        //触发亡语 ,todo 先下先触发
+        List<CardHolder<AnimalCard>> firstCardHoldersNeedRemove = firstCardHolders
+                .stream()
+                .filter(x -> x.getLive() == 0 || x.getCurrentBloodVolume() <= 0)
+                .peek(x -> x.dead(game, firstPlayer))
+                .collect(Collectors.toList());
+        List<CardHolder<AnimalCard>> lastCardHoldersNeedRemove = lastCardHolders
+                .stream()
+                .filter(x -> x.getLive() == 0 || x.getCurrentBloodVolume() <= 0)
+                .peek(x -> x.dead(game, lastPlayer))
+                .collect(Collectors.toList());
 
+        //从战斗区删除
+        firstCardHolders.removeAll(firstCardHoldersNeedRemove);
+        lastCardHolders.removeAll(lastCardHoldersNeedRemove);
+        //加入墓地
+        for (CardHolder<AnimalCard> animalCardCardHolder : firstCardHoldersNeedRemove) {
+            firstPlayer.getCemetery().addCard(animalCardCardHolder.getCard());
+        }
+        for (CardHolder<AnimalCard> animalCardCardHolder : lastCardHoldersNeedRemove) {
+            lastPlayer.getCemetery().addCard(animalCardCardHolder.getCard());
+        }
     }
 
     public void flushCardsBattleStatus(Player player) {

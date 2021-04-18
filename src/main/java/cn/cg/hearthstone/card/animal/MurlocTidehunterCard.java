@@ -64,9 +64,5 @@ public class MurlocTidehunterCard extends AnimalCard {
             setBloodVolume(1);
         }
 
-        @Override
-        public void BattleCry(Game game) {
-
-        }
     }
 }

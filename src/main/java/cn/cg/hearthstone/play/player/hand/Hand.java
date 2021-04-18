@@ -23,6 +23,10 @@ public class Hand implements HandOperations {
      * 手牌
      */
     private List<Card> handCard;
+    /**
+     * 当前手牌数
+     */
+    private Integer currentHandCardCount;
 
 
     public Hand() {
@@ -46,7 +50,11 @@ public class Hand implements HandOperations {
         List<Card> cards = deck.obtainCard(5);
         //抽五张牌加入手牌
         this.handCard = new ArrayList<>(cards);
+
     }
 
+    public Integer getCurrentHandCardCount() {
+        return handCard.size();
+    }
 
 }

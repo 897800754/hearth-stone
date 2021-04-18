@@ -51,8 +51,8 @@ public class CardHolder<T extends AnimalCard> implements CardHolderOperations {
     public void attack(CardHolder<AnimalCard> beAttackedHolder) {
         //攻击完成,计算血量
         //攻击者血量
-        this.setCurrentBloodVolume(beAttackedHolder.getCurrentAggressivity() - this.getCurrentBloodVolume());
-        beAttackedHolder.setCurrentBloodVolume(this.getCurrentAggressivity() - beAttackedHolder.getCurrentBloodVolume());
+        this.setCurrentBloodVolume(this.getCurrentBloodVolume() - beAttackedHolder.getCurrentAggressivity());
+        beAttackedHolder.setCurrentBloodVolume(beAttackedHolder.getCurrentBloodVolume() - this.getCurrentAggressivity());
         //攻击状态变更
         this.setBattleStatus(CardBattleStatusEnum.ATTACKED);
         //计算是否存活
@@ -92,7 +92,8 @@ public class CardHolder<T extends AnimalCard> implements CardHolderOperations {
     }
 
     @Override
-    public void dead(Game game) {
-
+    public void dead(Game game, Player fromPlay) {
+        //触发亡语
+        card.deathLanguage(game, fromPlay);
     }
 }

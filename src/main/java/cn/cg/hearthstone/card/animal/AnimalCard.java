@@ -1,8 +1,10 @@
 package cn.cg.hearthstone.card.animal;
 
+import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.card.CardBattleEffect;
 import cn.cg.hearthstone.enums.CardTypeEnum;
+import cn.cg.hearthstone.play.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,4 +34,13 @@ public abstract class AnimalCard extends Card implements CardBattleEffect {
     private Integer bloodVolume;
 
 
+    @Override
+    public void BattleCry(Game game) {
+
+    }
+
+    @Override
+    public void deathLanguage(Game game, Player fromPlay) {
+
+    }
 }

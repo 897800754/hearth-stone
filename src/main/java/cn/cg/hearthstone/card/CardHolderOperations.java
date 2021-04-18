@@ -1,6 +1,7 @@
 package cn.cg.hearthstone.card;
 
 import cn.cg.hearthstone.Game;
+import cn.cg.hearthstone.play.player.Player;
 
 /**
  * 战斗卡牌行为
@@ -23,5 +24,5 @@ public interface CardHolderOperations {
     /**
      * 死亡
      */
-    void dead(Game game);
+    void dead(Game game, Player fromPlay);
 }
