@@ -19,7 +19,7 @@ public interface CardHolderOperations {
     /**
      * 打出
      */
-    void show(Game game);
+    void show(Game game, Player fromPlay);
 
     /**
      * 死亡

@@ -35,7 +35,7 @@ public abstract class AnimalCard extends Card implements CardBattleEffect {
 
 
     @Override
-    public void BattleCry(Game game) {
+    public void BattleCry(Game game,Player fromPlay) {
 
     }
 

@@ -2,8 +2,6 @@ package cn.cg.hearthstone.play.player;
 
 import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
-import cn.cg.hearthstone.card.CardHolder;
-import cn.cg.hearthstone.card.animal.AnimalCard;
 
 /**
  * @author: cg1
@@ -16,7 +14,7 @@ public interface PlayerOperations {
      *
      * @param card
      */
-    void playHandCard(Card card);
+    void useHandCard(Card card);
 
     /**
      * 抽牌
@@ -31,7 +29,13 @@ public interface PlayerOperations {
     /**
      * 卡牌攻击
      */
-    void cardAttack(CardHolder<AnimalCard> from, Object to);
+    void cardAttack(Object from, Object to);
+
+
+    /**
+     * 法术攻击
+     */
+    void cardAttack(Object from);
 
     /**
      * 向另一个玩家/生物攻击

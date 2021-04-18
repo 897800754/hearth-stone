@@ -32,4 +32,10 @@ public interface HandOperations {
      */
     void initHand(Player player);
 
+    /**
+     * 根据code获取手牌
+     *
+     */
+    Card getByCardCode(String code);
+
 }

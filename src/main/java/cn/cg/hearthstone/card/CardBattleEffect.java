@@ -14,10 +14,12 @@ public interface CardBattleEffect {
     /**
      * 战吼
      */
-    void BattleCry(Game game);
+    void BattleCry(Game game,Player fromPlay);
 
     /**
      * 亡语
      */
     void deathLanguage(Game game, Player fromPlay);
+
+
 }

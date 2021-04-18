@@ -1,39 +1,31 @@
-package cn.cg.hearthstone.card.animal;
+package cn.cg.hearthstone.card.magic;
 
 import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.enums.OccupationEnum;
 import cn.cg.hearthstone.play.player.Player;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
- * 鱼人宝宝
- *
  * @author: cg1
- * @date: 2021-04-16 15:45
+ * @date: 2021-04-18 21:35
  **/
-@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-@ToString
-public class BabyFishmanCard extends AnimalCard {
-
-
+public class CoinCard extends MagicCard {
+    @Override
     public void init() {
         this.setCost(0);
         this.setOccupationEnum(OccupationEnum.NORMAL);
-        setCode("BabyFishmanCard");
-        setDesc("鱼人宝宝");
-        setName("鱼人宝宝");
-        setAggressivity(1);
-        setBloodVolume(1);
+        setCode("CoinCard");
+        setDesc("获得一个能量水晶");
+        setName("魔法币");
     }
-
 
     @Override
     public void BattleCry(Game game, Player fromPlay) {
-
+        //使用玩家获得一个临时魔法币
+        fromPlay.setCurrentCost(fromPlay.getCurrentCost() + 1);
     }
+
 }

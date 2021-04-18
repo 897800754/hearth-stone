@@ -4,6 +4,7 @@ import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.card.CardHolder;
 import cn.cg.hearthstone.card.animal.AnimalCard;
+import cn.cg.hearthstone.card.magic.MagicCard;
 import cn.cg.hearthstone.enums.CardBattleStatusEnum;
 import cn.cg.hearthstone.enums.CardTypeEnum;
 import cn.cg.hearthstone.hero.Hero;
@@ -44,7 +45,6 @@ public class Player implements PlayerOperations, PrintLogInfo {
         this.hand = new Hand();
         this.hero = hero;
         this.deckName = deckName;
-        initPlayer();
     }
 
     //todo
@@ -112,7 +112,7 @@ public class Player implements PlayerOperations, PrintLogInfo {
 
 
     @Override
-    public void playHandCard(Card card) {
+    public void useHandCard(Card card) {
         //check是否可以打出
         //todo 当前只判断费用
         int cost = currentCost - card.getCost();
@@ -129,11 +129,12 @@ public class Player implements PlayerOperations, PrintLogInfo {
             //加入战斗区
             CardHolder<AnimalCard> animalCardCardHolder = new CardHolder<>(animalCard);
             game.getBattleZone().addCardHolder(this.playName, animalCardCardHolder);
-            animalCardCardHolder.show(game);
+            animalCardCardHolder.show(game, this);
         } else {
-            //todo 法术
-            //加入到墓地
-
+            MagicCard magicCard = (MagicCard) card;
+            magicCard.BattleCry(game, this);
+            //加入墓地
+            cemetery.addCard(magicCard);
         }
         //从手牌中删除
         hand.remove(Collections.singletonList(card));
@@ -158,21 +159,31 @@ public class Player implements PlayerOperations, PrintLogInfo {
     }
 
     @Override
-    public void cardAttack(CardHolder<AnimalCard> from, Object to) {
-        if (!CardBattleStatusEnum.ATTACHABLE.getStatus().equals(from.getBattleStatus().getStatus())) {
-            log.warn("不可攻击");
-            return;
-        }
-        //攻击完成 CardHolder<AnimalCard> to
-        if (to instanceof CardHolder) {
-            //攻击生物
-            from.attack((CardHolder) to);
-        } else {
-            from.attack((Player) to);
+    public void cardAttack(Object from, Object to) {
+        //如果是卡牌攻击
+        if (from instanceof CardHolder) {
+            CardHolder fromCardHolder = (CardHolder) from;
+            if (!CardBattleStatusEnum.ATTACHABLE.getStatus().equals(fromCardHolder.getBattleStatus().getStatus())) {
+                log.warn("不可攻击");
+                return;
+            }
+            if (to instanceof CardHolder) {
+                //攻击生物
+                fromCardHolder.attack((CardHolder) to);
+            } else if (to instanceof Player) {
+                //英雄技能
+                fromCardHolder.attack((Player) to);
+            }
         }
         //判断是否要从棋牌中删除
         game.getBattleZone().removeIfNeed();
     }
+
+    @Override
+    public void cardAttack(Object from) {
+        cardAttack(from, null);
+    }
+
 
     @Override
     public void attack(Object to) {

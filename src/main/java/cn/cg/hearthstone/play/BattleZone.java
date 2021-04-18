@@ -116,5 +116,17 @@ public class BattleZone {
         return getCurrentPlayerBattleZone(game).size() + expect >= 7;
     }
 
+    /**
+     * 获取cardHolder
+     *
+     * @param cardCode
+     * @param player
+     * @return
+     */
+    public CardHolder<AnimalCard> getCardHolder(String cardCode, Player player) {
+        LinkedList<CardHolder<AnimalCard>> cardHolders = this.battleZone.get(player.getPlayName());
+        return cardHolders.stream().filter(x -> x.getCard().getCode().equals(cardCode)).findFirst().orElseThrow(() -> new RuntimeException("未找到cardCode"));
+    }
+
 
 }

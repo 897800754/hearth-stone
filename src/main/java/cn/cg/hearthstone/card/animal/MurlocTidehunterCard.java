@@ -4,6 +4,7 @@ import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.CardHolder;
 import cn.cg.hearthstone.enums.OccupationEnum;
 import cn.cg.hearthstone.play.BattleZone;
+import cn.cg.hearthstone.play.player.Player;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -36,7 +37,7 @@ public class MurlocTidehunterCard extends AnimalCard {
 
 
     @Override
-    public void BattleCry(Game game) {
+    public void BattleCry(Game game, Player fromPlay) {
         BattleZone battleZone = game.getBattleZone();
         //todo 召唤两个
         if (battleZone.currentPlayerBattleZoneFull(game, 1)) {

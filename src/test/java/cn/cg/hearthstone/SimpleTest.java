@@ -38,7 +38,7 @@ public class SimpleTest {
         //打出一张手牌
         List<Card> handCard = hand.getHandCard();
         Card card = handCard.get(0);
-        firstPlayer.playHandCard(card);
+        firstPlayer.useHandCard(card);
         //发起进攻,当然是失败的
         firstPlayer.attack(lastPlayer);
         firstPlayer.printInfo();
@@ -50,7 +50,7 @@ public class SimpleTest {
         //打出一张手牌
         handCard = hand.getHandCard();
         card = handCard.get(0);
-        lastPlayer.playHandCard(card);
+        lastPlayer.useHandCard(card);
         //回合结束
         game.finishRound();
         //先手玩家发起进攻
@@ -82,7 +82,7 @@ public class SimpleTest {
         //打出一张手牌
         List<Card> handCard = hand.getHandCard();
         Card card = handCard.get(0);
-        firstPlayer.playHandCard(card);
+        firstPlayer.useHandCard(card);
         //发起进攻,当然是失败的
         firstPlayer.attack(lastPlayer);
         //回合结束
@@ -93,7 +93,7 @@ public class SimpleTest {
         //打出一张手牌
         handCard = hand.getHandCard();
         card = handCard.get(0);
-        lastPlayer.playHandCard(card);
+        lastPlayer.useHandCard(card);
         lastPlayer.printInfo();
         //回合结束
         game.finishRound();
@@ -129,7 +129,7 @@ public class SimpleTest {
         //打出一张手牌
         List<Card> handCard = hand.getHandCard();
         Card card = handCard.get(0);
-        firstPlayer.playHandCard(card);
+        firstPlayer.useHandCard(card);
         //发起进攻,当然是失败的
         firstPlayer.attack(lastPlayer);
         //回合结束
@@ -140,7 +140,7 @@ public class SimpleTest {
         //打出一张手牌
         handCard = hand.getHandCard();
         card = handCard.get(0);
-        lastPlayer.playHandCard(card);
+        lastPlayer.useHandCard(card);
         lastPlayer.printInfo();
         //后手回合结束
         game.finishRound();
@@ -153,7 +153,7 @@ public class SimpleTest {
         //打出一张手牌
         handCard = hand.getHandCard();
         card = handCard.get(0);
-        lastPlayer.playHandCard(card);
+        lastPlayer.useHandCard(card);
         game.finishRound();
         lastPlayer.printInfo();
         //先手玩家发起进攻
@@ -169,6 +169,49 @@ public class SimpleTest {
         firstPlayer.printInfo();
         lastPlayer.printInfo();
         game.finishRound();
+
+    }
+
+    /**
+     * 幸运币
+     */
+    @Test
+    public void test4() {
+        //加入两个玩家 ,卡组,手牌都是用默认
+        Player firstPlayer = new Player("张三", new MasterHero(), "鱼人宝宝卡组");
+        Player lastPlayer = new Player("李四", new HunterHero(), "战利品卡组");
+        //1.创建对局
+        Game game = new Game(firstPlayer, lastPlayer);
+        //开始游戏
+        game.start();
+        firstPlayer.beginRound();
+        //获取玩家一的手牌
+        Hand hand;
+        hand = firstPlayer.getHand();
+        //打出一张鱼人宝宝
+        firstPlayer.useHandCard(hand.getByCardCode("BabyFishmanCard"));
+        //发起进攻,当然是失败的
+        firstPlayer.attack(lastPlayer);
+        //回合结束
+        game.finishRound();
+        //后手开始
+        //后手使用幸运币
+        hand = lastPlayer.getHand();
+        lastPlayer.useHandCard(hand.getByCardCode("CoinCard"));
+        lastPlayer.printInfo();
+        lastPlayer.useHandCard(hand.getByCardCode("LootHoarderCard"));
+        lastPlayer.printInfo();
+        //后手回合结束
+        game.finishRound();
+        //先手发起进攻
+        //后手开始
+        BattleZone battleZone = firstPlayer.getGame().getBattleZone();
+        //攻击敌方鱼人宝宝,回合结束
+        lastPlayer.printInfo();
+        firstPlayer.cardAttack(battleZone.getCardHolder("BabyFishmanCard", firstPlayer), battleZone.getCardHolder("LootHoarderCard", lastPlayer));
+        firstPlayer.printInfo();
+        lastPlayer.printInfo();
+        assert lastPlayer.getHand().getCurrentHandCardCount() == 5;
 
     }
 }

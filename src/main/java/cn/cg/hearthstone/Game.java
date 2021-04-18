@@ -56,6 +56,7 @@ public class Game implements Lifecycle {
     public Game(Player firstPlayer, Player lastPlayer) {
         this.firstPlayer = firstPlayer;
         this.lastPlayer = lastPlayer;
+        this.currentPlay = firstPlayer;
         this.roomStatus = RoomStatusEnum.BEGIN;
     }
 
@@ -66,12 +67,12 @@ public class Game implements Lifecycle {
     public void start() {
         Assert.notNull(firstPlayer, "玩家异常");
         Assert.notNull(lastPlayer, "玩家异常");
-        //  Assert.notNull(battleZone, "对局异常");
         battleZone = new BattleZone(this);
         this.firstPlayer.beginBattle(this);
         this.lastPlayer.beginBattle(this);
+        this.firstPlayer.initPlayer();
+        this.lastPlayer.initPlayer();
         this.roomStatus = RoomStatusEnum.ING;
-        this.currentPlay = firstPlayer;
         rounds = 1;
     }
 
@@ -102,22 +103,4 @@ public class Game implements Lifecycle {
         this.currentPlay.beginRound();
         log.debug("======================回合开始:玩家名{}================================", currentPlay.getPlayName());
     }
-
-    /**
-     * 获取先手玩家
-     *
-     * @return
-     */
-//    public Player getFirstPlay() {
-//        return this.firstPlayer;
-//    }
-
-    /**
-     * 获取后手玩家
-     *
-     * @return
-     */
-//    public Player getLastPlay() {
-//        return this.lastPlayer;
-//    }
 }

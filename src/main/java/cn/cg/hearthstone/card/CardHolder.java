@@ -86,9 +86,9 @@ public class CardHolder<T extends AnimalCard> implements CardHolderOperations {
     }
 
     @Override
-    public void show(Game game) {
+    public void show(Game game, Player fromPlay) {
         //触发战吼
-        card.BattleCry(game);
+        card.BattleCry(game, fromPlay);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class Cemetery {
     private List<Card> cardCemetery = new ArrayList<>();
 
 
-    void addCard(Card card) {
+    public void addCard(Card card) {
         cardCemetery.add(card);
     }
 

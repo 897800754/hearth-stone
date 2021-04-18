@@ -2,6 +2,7 @@ package cn.cg.hearthstone.play.player.hand;
 
 import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
+import cn.cg.hearthstone.card.magic.CoinCard;
 import cn.cg.hearthstone.play.player.deck.Deck;
 import cn.cg.hearthstone.play.player.Player;
 import lombok.Getter;
@@ -60,12 +61,18 @@ public class Hand implements HandOperations {
         } else {
             //后手4张牌+硬币
             cards = deck.obtainCard(4);
-            //   cards.add();
+            cards.add(new CoinCard());
         }
         //抽四张牌加入手牌
         this.handCard = new ArrayList<>(cards);
         setCurrentHandCardCount();
     }
+
+    @Override
+    public Card getByCardCode(String code) {
+        return handCard.stream().filter(x -> x.getCode().equals(code)).findFirst().orElseThrow(() -> new RuntimeException("未到找对应卡牌"));
+    }
+
 
     public Integer getCurrentHandCardCount() {
         return handCard.size();
