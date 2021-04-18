@@ -23,14 +23,14 @@ import java.util.Map;
 @Setter
 public class BattleZone {
 
-    private Map<String, List<CardHolder<AnimalCard>>> battleZone;
+    private Map<String, LinkedList<CardHolder<AnimalCard>>> battleZone;
     @JsonIgnore
     private Game game;
 
 
     public BattleZone(Game game) {
         this.game = game;
-        this.battleZone = new HashMap<String, List<CardHolder<AnimalCard>>>();
+        this.battleZone = new HashMap<String, LinkedList<CardHolder<AnimalCard>>>();
         this.battleZone.put(game.getFirstPlayer().getPlayName(), new LinkedList<CardHolder<AnimalCard>>());
         this.battleZone.put(game.getLastPlayer().getPlayName(), new LinkedList<CardHolder<AnimalCard>>());
     }
@@ -75,5 +75,25 @@ public class BattleZone {
     public List<CardHolder<AnimalCard>> getLastPlayBattleZone() {
         return this.battleZone.get(game.getLastPlayer().getPlayName());
     }
+
+    /**
+     * 获取当前玩家战斗区
+     *
+     * @return
+     */
+    public List<CardHolder<AnimalCard>> getCurrentPlayerBattleZone(Game game) {
+        return this.battleZone.get(game.getCurrentPlay().getPlayName());
+    }
+
+    /**
+     * 卡牌是否大于7
+     *
+     * @param game
+     * @return
+     */
+    public boolean currentPlayerBattleZoneFull(Game game, Integer expect) {
+        return getCurrentPlayerBattleZone(game).size() + expect >= 7;
+    }
+
 
 }

@@ -1,5 +1,6 @@
 package cn.cg.hearthstone.card;
 
+import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.animal.AnimalCard;
 import cn.cg.hearthstone.enums.CardBattleStatusEnum;
 import cn.cg.hearthstone.play.player.Player;
@@ -12,7 +13,7 @@ import lombok.Setter;
  **/
 @Getter
 @Setter
-public class CardHolder<T extends AnimalCard> {
+public class CardHolder<T extends AnimalCard> implements CardHolderOperations {
 
     private T card;
 
@@ -65,20 +66,33 @@ public class CardHolder<T extends AnimalCard> {
 
     /**
      * 攻击玩家
+     *
      * @param beAttackedPlay
      */
     public void attack(Player beAttackedPlay) {
-      //todo
         //玩家血量减
-
-
-
+        Integer currentAggressivity = this.getCurrentAggressivity();
+        beAttackedPlay.setCurrentBloodVolume(beAttackedPlay.getCurrentBloodVolume() - currentAggressivity);
     }
-
-
 
 
     public void flushBattleStatus() {
         this.battleStatus = CardBattleStatusEnum.ATTACHABLE;
+    }
+
+    @Override
+    public void init(Game game) {
+
+    }
+
+    @Override
+    public void show(Game game) {
+        //触发战吼
+        card.BattleCry(game);
+    }
+
+    @Override
+    public void dead(Game game) {
+
     }
 }

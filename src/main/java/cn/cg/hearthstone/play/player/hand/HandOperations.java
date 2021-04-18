@@ -1,4 +1,4 @@
-package cn.cg.hearthstone.play.hand;
+package cn.cg.hearthstone.play.player.hand;
 
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.play.player.Player;

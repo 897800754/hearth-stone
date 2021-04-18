@@ -1,7 +1,7 @@
-package cn.cg.hearthstone.play.hand;
+package cn.cg.hearthstone.play.player.hand;
 
 import cn.cg.hearthstone.card.Card;
-import cn.cg.hearthstone.play.deck.Deck;
+import cn.cg.hearthstone.play.player.deck.Deck;
 import cn.cg.hearthstone.play.player.Player;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +23,7 @@ public class Hand implements HandOperations {
      * 手牌
      */
     private List<Card> handCard;
+
 
     public Hand() {
     }

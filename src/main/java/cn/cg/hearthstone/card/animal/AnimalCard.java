@@ -1,6 +1,7 @@
 package cn.cg.hearthstone.card.animal;
 
 import cn.cg.hearthstone.card.Card;
+import cn.cg.hearthstone.card.CardBattleEffect;
 import cn.cg.hearthstone.enums.CardTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -13,7 +14,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
-public abstract class AnimalCard extends Card {
+public abstract class AnimalCard extends Card implements CardBattleEffect {
 
 
     public AnimalCard() {

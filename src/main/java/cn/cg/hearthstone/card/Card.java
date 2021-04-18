@@ -15,7 +15,7 @@ import java.util.UUID;
  **/
 @Getter
 @Setter
-public abstract class Card implements CardOperations {
+public abstract class Card {
 
     private String id = UUID.randomUUID().toString();
     /**
@@ -42,5 +42,7 @@ public abstract class Card implements CardOperations {
      * 卡牌编号
      */
     private String code;
+
+    public abstract void init();
 
 }

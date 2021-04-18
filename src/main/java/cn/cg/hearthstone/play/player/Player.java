@@ -4,14 +4,14 @@ import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.card.CardHolder;
 import cn.cg.hearthstone.card.animal.AnimalCard;
-import cn.cg.hearthstone.card.animal.BabyFishmanCard;
 import cn.cg.hearthstone.enums.CardBattleStatusEnum;
 import cn.cg.hearthstone.enums.CardTypeEnum;
 import cn.cg.hearthstone.hero.Hero;
 import cn.cg.hearthstone.play.BattleZone;
 import cn.cg.hearthstone.play.Cemetery;
-import cn.cg.hearthstone.play.deck.Deck;
-import cn.cg.hearthstone.play.hand.Hand;
+import cn.cg.hearthstone.play.player.deck.Deck;
+import cn.cg.hearthstone.play.player.deck.DeckPool;
+import cn.cg.hearthstone.play.player.hand.Hand;
 import cn.cg.hearthstone.support.JsonUtil;
 import cn.cg.hearthstone.support.PrintLogInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -43,7 +43,7 @@ public class Player implements PlayerOperations, PrintLogInfo {
         this.deck = new Deck();
         this.hand = new Hand();
         this.hero = hero;
-        this.deckName = deckName = "鱼人宝宝";
+        this.deckName = deckName;
         initPlayer();
     }
 
@@ -76,6 +76,18 @@ public class Player implements PlayerOperations, PrintLogInfo {
      * 当前费用
      */
     private Integer currentCost = 0;
+
+    public Integer getCurrentBloodVolume() {
+        return currentBloodVolume;
+    }
+
+    public void setCurrentBloodVolume(Integer currentBloodVolume) {
+        this.currentBloodVolume = currentBloodVolume;
+        if (currentBloodVolume <= 0) {
+            game.stop();
+        }
+    }
+
     /**
      * 总费用
      */
@@ -88,7 +100,7 @@ public class Player implements PlayerOperations, PrintLogInfo {
      * 手牌上限
      */
     //todo 暂未处理
-    private Integer handCardMaxLimit = 5;
+    private Integer handCardMaxLimit = 10;
     /**
      * 墓地
      */
@@ -113,14 +125,11 @@ public class Player implements PlayerOperations, PrintLogInfo {
         }
         //生物卡牌
         if (CardTypeEnum.ANIMAL.getCode().equals(card.getCardTypeEnum().getCode())) {
-            //战吼回调
             AnimalCard animalCard = (AnimalCard) card;
-            animalCard.battleRoar();
-
             //加入战斗区
             CardHolder<AnimalCard> animalCardCardHolder = new CardHolder<>(animalCard);
-
             game.getBattleZone().addCardHolder(this.playName, animalCardCardHolder);
+            animalCardCardHolder.show(game);
         } else {
             //todo 法术
             //加入到墓地
@@ -172,7 +181,7 @@ public class Player implements PlayerOperations, PrintLogInfo {
 
     @Override
     public void stopRound() {
-        game.finishRound(this);
+        game.finishRound();
     }
 
     @Override
@@ -186,7 +195,7 @@ public class Player implements PlayerOperations, PrintLogInfo {
         //己方怪物状态重置
         flushZoneCardsBattleStatus();
         //打印状态信息
-        printInfo();
+        //   printInfo();
     }
 
     @Override
@@ -213,13 +222,8 @@ public class Player implements PlayerOperations, PrintLogInfo {
      * @return
      */
     public Stack<Card> getDeckCards(String deckName) {
-        //放入30张鱼人宝宝
-        Stack<Card> deckCards = new Stack<>();
-        for (int i = 0; i < 30; i++) {
-            BabyFishmanCard babyFishmanCard = new BabyFishmanCard();
-            deckCards.add(babyFishmanCard);
-        }
-        return deckCards;
+        return DeckPool.getDeck(deckName);
+
     }
 
     @Override
@@ -228,7 +232,6 @@ public class Player implements PlayerOperations, PrintLogInfo {
         boolean debugEnabled = log.isDebugEnabled();
         //debug模式 打印详细日志
         if (debugEnabled) {
-            log.debug("======================回合开始:玩家名{}================================",this.getPlayName());
             log.debug("基本信息:\r\n{}", JsonUtil.toJsonString(this));
             log.debug("牌局情况:\r\n{}", JsonUtil.toJsonString(this.getGame()));
 

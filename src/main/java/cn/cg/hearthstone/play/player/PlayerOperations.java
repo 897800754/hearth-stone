@@ -1,9 +1,9 @@
 package cn.cg.hearthstone.play.player;
 
+import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.card.CardHolder;
 import cn.cg.hearthstone.card.animal.AnimalCard;
-import cn.cg.hearthstone.Game;
 
 /**
  * @author: cg1

@@ -71,37 +71,36 @@ public class Game implements Lifecycle {
         this.firstPlayer.beginBattle(this);
         this.lastPlayer.beginBattle(this);
         this.roomStatus = RoomStatusEnum.ING;
+        this.currentPlay = firstPlayer;
         rounds = 1;
-        isRunning();
     }
 
     @Override
     public void stop() {
         this.roomStatus = RoomStatusEnum.END;
         //todo
+        log.info("游戏结束");
     }
 
     @Override
     public boolean isRunning() {
-        //todo
         return RoomStatusEnum.ING.getStatus().equals(roomStatus.getStatus());
     }
 
     /**
-     * 玩家完成对决
-     *
-     * @param player 完成的玩家 todo 可优化
+     * 玩家完成对决,交换玩家
      */
-    public void finishRound(Player player) {
-        if (firstPlayer.equals(player)) {
+    public void finishRound() {
+        log.debug("======================回合结束:玩家名{}================================", currentPlay.getPlayName());
+        if (firstPlayer.equals(currentPlay)) {
             this.currentPlay = lastPlayer;
         } else {
             //后手玩家结束游戏,回合数+1
             this.currentPlay = firstPlayer;
             rounds++;
         }
-        log.debug("======================回合结束:玩家名{}================================", player.getPlayName());
         this.currentPlay.beginRound();
+        log.debug("======================回合开始:玩家名{}================================", currentPlay.getPlayName());
     }
 
     /**

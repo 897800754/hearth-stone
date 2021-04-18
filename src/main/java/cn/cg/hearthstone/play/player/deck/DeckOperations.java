@@ -1,4 +1,4 @@
-package cn.cg.hearthstone.play.deck;
+package cn.cg.hearthstone.play.player.deck;
 
 
 import cn.cg.hearthstone.card.Card;

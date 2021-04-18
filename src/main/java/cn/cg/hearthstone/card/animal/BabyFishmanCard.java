@@ -1,5 +1,6 @@
 package cn.cg.hearthstone.card.animal;
 
+import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.enums.OccupationEnum;
 import lombok.*;
 
@@ -16,7 +17,6 @@ import lombok.*;
 public class BabyFishmanCard extends AnimalCard {
 
 
-    @Override
     public void init() {
         this.setCost(0);
         this.setOccupationEnum(OccupationEnum.NORMAL);
@@ -27,12 +27,9 @@ public class BabyFishmanCard extends AnimalCard {
         setBloodVolume(1);
     }
 
-    /**
-     * 战吼
-     */
+
     @Override
-    public void battleRoar() {
+    public void BattleCry(Game game) {
 
     }
-
 }
