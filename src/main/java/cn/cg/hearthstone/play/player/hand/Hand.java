@@ -1,5 +1,6 @@
 package cn.cg.hearthstone.play.player.hand;
 
+import cn.cg.hearthstone.Game;
 import cn.cg.hearthstone.card.Card;
 import cn.cg.hearthstone.play.player.deck.Deck;
 import cn.cg.hearthstone.play.player.Player;
@@ -35,6 +36,7 @@ public class Hand implements HandOperations {
     @Override
     public void addCard(List<Card> cards) {
         this.handCard.addAll(cards);
+        setCurrentHandCardCount();
     }
 
     @Override
@@ -42,19 +44,34 @@ public class Hand implements HandOperations {
         for (Card card : cards) {
             handCard.removeIf(next -> next.getId().equals(card.getId()));
         }
+        setCurrentHandCardCount();
     }
 
     @Override
     public void initHand(Player player) {
         Deck deck = player.getDeck();
-        List<Card> cards = deck.obtainCard(5);
-        //抽五张牌加入手牌
-        this.handCard = new ArrayList<>(cards);
+        List<Card> cards;
 
+        Game game = player.getGame();
+        Player currentPlay = game.getCurrentPlay();
+        if (currentPlay.equals(player)) {
+            //先手3张排
+            cards = deck.obtainCard(3);
+        } else {
+            //后手4张牌+硬币
+            cards = deck.obtainCard(4);
+            //   cards.add();
+        }
+        //抽四张牌加入手牌
+        this.handCard = new ArrayList<>(cards);
+        setCurrentHandCardCount();
     }
 
     public Integer getCurrentHandCardCount() {
         return handCard.size();
     }
 
+    public void setCurrentHandCardCount() {
+        this.currentHandCardCount = handCard.size();
+    }
 }
